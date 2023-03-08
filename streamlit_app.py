@@ -1,12 +1,11 @@
 import altair as alt
 import pandas as pd
 import streamlit as st
-from vega_datasets import data
 
 ### Load Data ###
 @st.cache_resource()
 def load_data():
-    covid_df = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/Post-COVID_Conditions.csv')
+    covid_df = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/post_covid_with_state_ids.csv')
     shortnames = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/shortnames.tsv', sep='\t')
     covid_df = covid_df.merge(shortnames, how='left', on = ['Indicator'])
     return covid_df
@@ -36,14 +35,10 @@ f1 = df
 
 #### Data Set-Up
 # Get state codes
-pop = data.population_engineers_hurricanes()
-pop = pop[['state', 'id']]
-pop.columns = ['State', 'id']
 
 f1 = f1[f1['Group'].isin(['By State', 'National Estimate'])]
-f1 = f1[['Indicator', 'State', 'Time Period', 'Time Period Label', 'Value', 'LowCI', 'HighCI', 'Indicator_short']]
-f1.columns = ['Indicator', 'State', 'Time Period Num', 'Time Period', 'Incidence (%)', 'LowCI', 'HighCI', 'Indicator_short']
-f1 = f1.merge(pop, how = 'left', on = 'State')
+f1 = f1[['Indicator', 'State', 'Time Period', 'Time Period Label', 'Value', 'LowCI', 'HighCI', 'Indicator_short', 'id']]
+f1.columns = ['Indicator', 'State', 'Time Period Num', 'Time Period', 'Incidence (%)', 'LowCI', 'HighCI', 'Indicator_short', 'id']
 f1.loc[f1['State'] == 'United States', 'id'] = 0
 
 # Choose time period:
