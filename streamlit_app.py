@@ -23,7 +23,7 @@ pop.columns = ['State', 'id']
 
 f1 = f1[f1['Group'].isin(['By State', 'National Estimate'])]
 f1 = f1[['Indicator', 'State', 'Time Period', 'Time Period Label', 'Value', 'LowCI', 'HighCI']]
-f1.columns = ['Indicator', 'State', 'Time Period Num', 'Time Period', 'Incidence', 'LowCI', 'HighCI']
+f1.columns = ['Indicator', 'State', 'Time Period Num', 'Time Period', 'Incidence (%)', 'LowCI', 'HighCI']
 f1 = f1.merge(pop, how = 'left', on = 'State')
 f1.loc[f1['State'] == 'United States', 'id'] = 0
 
@@ -39,7 +39,7 @@ time_period = st.selectbox("Time Period: ", ('Jun 1 - Jun 13, 2022', 'Jun 29 - J
 f1_bar = f1
 
 f1_map = f1[f1['Indicator'] == 'Ever experienced long COVID, as a percentage of adults who ever had COVID']
-f1_map = f1_map.sort_values('Incidence', ascending = False)
+f1_map = f1_map.sort_values('Incidence (%)', ascending = False)
 f1_map['Rank'] = range(1, len(f1_map) + 1)
 
 f1_map = f1_map[f1_map["Time Period"] == time_period]
@@ -64,25 +64,24 @@ chart_base = alt.Chart(states
     ).add_selection(selector, selector2
     ).transform_lookup(
         lookup="id",
-        from_=alt.LookupData(f1_map, "id", ["Incidence", 'State', 'Rank', 'Time Period']),
+        from_=alt.LookupData(f1_map, "id", ["Incidence (%)", 'State', 'Rank', 'Time Period']),
     )
-rate_scale = alt.Scale(domain=[f1_map['Incidence'].min(), f1_map['Incidence'].max()], scheme='oranges')
-rate_color = alt.Color(field="Incidence", type="quantitative", scale=rate_scale)
+rate_scale = alt.Scale(domain=[f1_map['Incidence (%)'].min(), f1_map['Incidence (%)'].max()], scheme='oranges')
+rate_color = alt.Color(field="Incidence (%)", type="quantitative", scale=rate_scale)
 
 chart_rate = chart_base.mark_geoshape().encode(
     color = rate_color,
-    tooltip = ['Incidence:Q', 'Rank:Q']
+    tooltip = ['Incidence (%):Q', 'Rank:Q']
     ).transform_filter(
     selector
     ).properties(
-    title='Long Covid Rates by State'
+    title='Long Covid Incidence Rates by State'
 )
 
 
 chart_details = alt.Chart(f1_bar).mark_bar().encode(
     y = alt.Y('Indicator:N', title = 'Indication'),
-    x = alt.X('Incidence:Q', 
-        title = 'Incidence (%)', 
+    x = alt.X('Incidence (%):Q', 
         scale=alt.Scale(domain=[0, 100]))
     ).transform_filter(
      selector2
