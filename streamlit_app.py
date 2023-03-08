@@ -80,7 +80,7 @@ chart_rate = chart_base.mark_geoshape().encode(
 
 
 chart_details = alt.Chart(f1_bar).mark_bar().encode(
-    y = alt.Y('Indicator:N', title = 'Indication', scale=alt.Scale(domain=[
+    y = alt.Y('Indicator:N', title = 'Indication'),
     x = alt.X('Incidence:Q', 
         title = 'Incidence (%)', 
         scale=alt.Scale(domain=[0, 100]))
@@ -104,9 +104,6 @@ group_default = [
 groups = st.multiselect("Groups", list(f2['Group'].unique()), group_default)
 subset = f2[f2["Group"].isin(groups)]
 
-#selection = alt.selection_multi(fields=["group"])
-#click = alt.selection_single(on="click", fields=["group"])
-
 # Configure heatmap
 chart2 = alt.Chart(subset).mark_rect().encode(
     y=alt.Y('Indicator:O', title=""),
@@ -119,8 +116,52 @@ chart2 = alt.Chart(subset).mark_rect().encode(
   x='independent'
 ).configure_axis(
     labelLimit=1000
-)#.add_selection(click)
-
+)
 st.altair_chart(chart2, use_container_width=True)
 
-##### 
+#####  Adrienne
+f3 = df[df.Phase != (-1)]
+
+demographic = st.selectbox("Demogrpahic Group: ", ('By Age', 'By Sex', 'By Gender identity',
+         'By Sexual orientation', 'By Race/Hispanic ethnicity', 'By Education', 'By Disability status'))
+
+f3_subset = f3[f3["Group"] == demographic]
+
+selector3 = alt.selection_single(fields=['Subgroup'])
+
+color = alt.condition(selector3,
+                      alt.Color('Subgroup:N', legend=None),
+                      alt.value('lightgray'))
+
+line = alt.Chart(f3_subset).mark_line().encode(
+    x= alt.X('Time Period End Date:T', axis = alt.Axis(format = ("%b %Y"), labelAngle= 270)),
+    y= alt.Y('Value', title = "Percentage"),
+    color=color
+).properties(
+    width=150,
+    height=250
+)
+
+band = alt.Chart(f3_subset).mark_area(opacity=0.33).encode(
+    x='Time Period End Date:T',
+    y= 'LowCI',
+    y2= 'HighCI',
+    color = color
+).properties(
+    width=250,
+    height=250
+)
+
+legend = alt.Chart(f3_subset).mark_point().encode(
+    y=alt.Y('Subgroup:N', axis=alt.Axis(orient='right')),
+    color=color
+).add_selection(
+    selector3
+)
+chart3 = alt.layer(line, band, data=f3_subset).facet(
+    facet ='Indicator_short',columns = 3).properties(
+        title = "Percentage of responses over time").resolve_scale(
+            y = "independent", x= "independent")
+
+st.altair_chart(chart3 | legend, use_container_width=True)
+
