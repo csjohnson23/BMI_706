@@ -59,9 +59,10 @@ f1_bar = f1
 
 f1_map = f1[f1['Indicator'] == 'Ever experienced long COVID, as a percentage of adults who ever had COVID']
 f1_map = f1_map.sort_values('Incidence (%)', ascending = False)
-f1_map['Rank'] = range(1, len(f1_map) + 1)
+
 
 f1_map = f1_map[f1_map["Time Period"] == time_period]
+f1_map['Rank'] = range(1, len(f1_map) + 1)
 f1_bar = f1_bar[f1_bar["Time Period"] == time_period]
 
 #### Map
