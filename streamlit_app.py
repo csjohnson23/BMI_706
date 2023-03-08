@@ -61,7 +61,7 @@ f1_map['Rank'] = range(1, len(f1_map) + 1)
 f1_bar = f1_bar[f1_bar["Time Period"] == time_period]
 
 #### Map
-states = alt.topo_feature(data.us_10m.url, feature='states')
+states = alt.topo_feature('https://raw.githubusercontent.com/vega/vega-datasets/main/data/us-10m.json', feature='states')
 project = 'albersUsa'
 
 background = alt.Chart(states
