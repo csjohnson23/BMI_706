@@ -117,7 +117,7 @@ f2 = df.groupby(["Indicator_short", "Group", "Subgroup", "Value"], as_index=Fals
 group_default = [
     "By Age"
 ]
-groups = st.multiselect("Groups", list(f2['Group'].unique()), group_default)
+groups = st.multiselect("Select Demographic Groups:", list(f2['Group'].unique()), group_default)
 subset = f2[f2["Group"].isin(groups)]
 
 # Configure heatmap
@@ -138,7 +138,7 @@ st.altair_chart(chart2, use_container_width=True)
 #####  Adrienne
 f3 = df[df.Phase != (-1)]
 
-demographic = st.selectbox("Demogrpahic Group: ", ('By Age', 'By Sex', 'By Gender identity',
+demographic = st.selectbox("Select Demographic Group: ", ('By Age', 'By Sex', 'By Gender identity',
          'By Sexual orientation', 'By Race/Hispanic ethnicity', 'By Education', 'By Disability status'))
 
 f3_subset = f3[f3["Group"] == demographic]
