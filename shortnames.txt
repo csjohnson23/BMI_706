@@ -1,3 +1,4 @@
+Indicator Indicator_short
 Any activity limitations from long COVID, as a percentage of adults who currently have long COVID	Any limitations (current long COVID)
 Any activity limitations from long COVID, as a percentage of all adults	Any limitations (all adults)
 Currently experiencing long COVID, as a percentage of adults who ever had COVID	Current long COVID (adults who had COVID)
