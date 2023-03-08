@@ -6,7 +6,7 @@ from vega_datasets import data
 ### Load Data ###
 @st.cache_resource()
 def load_data():
-    covid_df = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/Post-COVID_Conditions.csv')
+    covid_df = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/post_covid_with_state_ids.csv')
     shortnames = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/shortnames.tsv', sep='\t')
     covid_df = covid_df.merge(shortnames, how='left', on = ['Indicator'])
     return covid_df
