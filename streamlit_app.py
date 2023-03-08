@@ -4,13 +4,32 @@ import streamlit as st
 from vega_datasets import data
 
 ### Load Data ###
-@st.cache(allow_output_mutation=True)
+@st.cache_resource()
 def load_data():
     covid_df = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/Post-COVID_Conditions.csv')
+    shortnames = pd.read_csv('https://raw.githubusercontent.com/csjohnson23/BMI_706/main/shortnames.tsv', sep='\t')
+    covid_df = covid_df.merge(shortnames, how='left', on = ['Indicator'])
     return covid_df
 
-df = load_data()
 
+def add_bg_from_url():
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background-image: url("https://raw.githubusercontent.com/csjohnson23/BMI_706/main/Coronavirus_background_best.jpg");
+             background-attachment: fixed;
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
+
+add_bg_from_url()
+
+df = load_data()
+st.write('## Interrogation of Long Covid Incidence and Impact in the US Population')
 
 ### Claire ###
 f1 = df
@@ -22,8 +41,8 @@ pop = pop[['state', 'id']]
 pop.columns = ['State', 'id']
 
 f1 = f1[f1['Group'].isin(['By State', 'National Estimate'])]
-f1 = f1[['Indicator', 'State', 'Time Period', 'Time Period Label', 'Value', 'LowCI', 'HighCI']]
-f1.columns = ['Indicator', 'State', 'Time Period Num', 'Time Period', 'Incidence (%)', 'LowCI', 'HighCI']
+f1 = f1[['Indicator', 'State', 'Time Period', 'Time Period Label', 'Value', 'LowCI', 'HighCI', 'Indicator_short']]
+f1.columns = ['Indicator', 'State', 'Time Period Num', 'Time Period', 'Incidence (%)', 'LowCI', 'HighCI', 'Indicator_short']
 f1 = f1.merge(pop, how = 'left', on = 'State')
 f1.loc[f1['State'] == 'United States', 'id'] = 0
 
@@ -80,9 +99,11 @@ chart_rate = chart_base.mark_geoshape().encode(
 
 
 chart_details = alt.Chart(f1_bar).mark_bar().encode(
-    y = alt.Y('Indicator:N', title = 'Indication'),
+    y = alt.Y('Indicator_short:N', title = ''),
     x = alt.X('Incidence (%):Q', 
-        scale=alt.Scale(domain=[0, 100]))
+        scale=alt.Scale(domain=[0, 100])),
+    tooltip=alt.Tooltip('Indicator_short:N', title=''),
+    color = alt.value("#3D8789")
     ).transform_filter(
      selector2
 ).properties(
@@ -94,7 +115,7 @@ f1_chart = alt.vconcat(background + chart_rate, chart_details
 st.altair_chart(f1_chart, use_container_width=True)
 
 ### Grace ###
-f2 = df.groupby(["Indicator", "Group", "Subgroup", "Value"], as_index=False).mean()
+f2 = df.groupby(["Indicator_short", "Group", "Subgroup", "Value"], as_index=False).mean()
 
 #### Heatmap
 group_default = [
@@ -105,10 +126,10 @@ subset = f2[f2["Group"].isin(groups)]
 
 # Configure heatmap
 chart2 = alt.Chart(subset).mark_rect().encode(
-    y=alt.Y('Indicator:O', title=""),
+    y=alt.Y('Indicator_short:O', title=""),
     x=alt.X('Subgroup:O', title=""),
-    color=alt.Color('Value:Q', title="Percent Response", scale=alt.Scale(scheme='viridis')),
-    tooltip=[alt.Tooltip('Indicator:O', title="Indicator"), alt.Tooltip('Value:Q', title="Percent Response")]
+    color=alt.Color('Value:Q', title="Percent Response", scale=alt.Scale(scheme='teals')),
+    tooltip=[alt.Tooltip('Indicator_short:O', title="Indicator"), alt.Tooltip('Value:Q', title="Percent Response")]
 ).facet(
     column=alt.Column('Group:O', title="", sort=groups)
 ).resolve_scale(
@@ -133,7 +154,7 @@ color = alt.condition(selector3,
                       alt.value('lightgray'))
 
 line = alt.Chart(f3_subset).mark_line().encode(
-    x= alt.X('Time Period End Date:T', axis = alt.Axis(format = ("%b %Y"), labelAngle= 270)),
+    x= alt.X('Time Period End Date:T', axis = alt.Axis(format = ("%b %Y"), labelAngle= 270), title=''),
     y= alt.Y('Value', title = "Percentage"),
     color=color
 ).properties(
@@ -158,9 +179,10 @@ legend = alt.Chart(f3_subset).mark_point().encode(
     selector3
 )
 chart3 = alt.layer(line, band, data=f3_subset).facet(
-    facet ='Indicator_short',columns = 3).properties(
+    facet = alt.Facet('Indicator_short:O', title=None), columns = 3).properties(
         title = "Percentage of responses over time").resolve_scale(
             y = "independent", x= "independent")
 
 st.altair_chart(chart3 | legend, use_container_width=True)
 
+st.write('Background creator: VectorStock.com/32170409 ')
