@@ -1,7 +1,7 @@
 ## BMI706 - Final Project
 
 ### Description
-This is the repo for the "Interrogation of Long Covid Incidence and Impact in the US Population" streamlit app. 
+This is the repo for the "Interrogation of Long Covid Incidence and Impact in the US Population" streamlit app found here: https://csjohnson23-bmi-706-streamlit-app-bf0zpy.streamlit.app/#interrogation-of-long-covid-incidence-and-impact-in-the-us-population 
 
 The data used for these visualizations were gathered by the CDC's Household Pulse Survey to determine how long COVID impacts individuals over the age of 18 in the US. Individuals self-reported demographic data and indicated if they have ever experienced long COVID and to what degree it is limiting their lifestyle. All of the reported data is therefore binned into unique demographic categories.
 
