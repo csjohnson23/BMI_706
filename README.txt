@@ -1,0 +1,9 @@
+## BMI706 - Final Project
+
+### Description
+This is the repo for the "Interrogation of Long Covid Incidence and Impact in the US Population" streamlit app. 
+
+The data used for these visualizations were gathered by the CDC's Household Pulse Survey to determine how long COVID impacts individuals over the age of 18 in the US. Individuals self-reported demographic data and indicated if they have ever experienced long COVID and to what degree it is limiting their lifestyle. All of the reported data is therefore binned into unique demographic categories.
+
+Our application allows users to explore the Household Pulse Survey responses. The choropleth map allows users to view the geographical distribution of long COVID at different time points. Clicking on a state updates an associated bar chart which further breaks down the responses by survey indicators. A tooltip shows the incidence percentage of people who had COVID in that state as well as the state’s ranking in terms of long COVID incidence rate. The heatmaps present the data broken down into demographic groups, allowing for the comparison of all indications across and within demographic groups. The multi-selector tool lets users pick which groups they are interested in viewing. Additionally, a tooltip shows specific data values for each cell. Finally, the line charts allow for users to identify trends in incidence over time within demographic groups. A dropdown menu allows for users to select the demographic group of interest, and an interactive legend allows users to select the subgroup within each demographic they would like to examine more closely. The charts show each indication and update together so specific trends across indications can be identified.
+
