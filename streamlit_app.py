@@ -18,7 +18,7 @@ def add_bg_from_url():
          .stApp {{
              background-image: url("https://raw.githubusercontent.com/csjohnson23/BMI_706/main/Coronavirus_background_best.jpg");
              background-attachment: fixed;
-             background-size: 1800px
+             background-size: 1750px
          }}
          </style>
          """,
@@ -43,7 +43,7 @@ f1.loc[f1['State'] == 'United States', 'id'] = 0
 
 # Choose time period:
 time_period = st.selectbox("Time Period: ", ('Jun 1 - Jun 13, 2022', 'Jun 29 - Jul 11, 2022',
-       'Jul 27 - Aug 8, 2022', 'Aug 24 - Sep 13, 2022',
+       'Jul 27 - Aug 8, 2022',
        'Sep 14 - Sep 26, 2022', 'Oct 5 - Oct 17, 2022',
        'Nov 2 - Nov 14, 2022', 'Nov 30 - Dec 8, 2022',
        'Dec 9 - Dec 19, 2022', 'Jan 4 - Jan 16, 2023',
@@ -124,7 +124,7 @@ subset = f2[f2["Group"].isin(groups)]
 chart2 = alt.Chart(subset).mark_rect().encode(
     y=alt.Y('Indicator_short:O', title=""),
     x=alt.X('Subgroup:O', title=""),
-    color=alt.Color('Value:Q', title="Percent Response", scale=alt.Scale(scheme='teals')),
+    color=alt.Color('Value:Q', title="Incidence (%)", scale=alt.Scale(scheme='teals')),
     tooltip=[alt.Tooltip('Indicator_short:O', title="Indicator"), alt.Tooltip('Value:Q', title="Percent Response")]
 ).facet(
     column=alt.Column('Group:O', title="", sort=groups)
@@ -151,7 +151,7 @@ color = alt.condition(selector3,
 
 line = alt.Chart(f3_subset).mark_line().encode(
     x= alt.X('Time Period End Date:T', axis = alt.Axis(format = ("%b %Y"), labelAngle= 270), title=''),
-    y= alt.Y('Value', title = "Percentage"),
+    y= alt.Y('Value', title = "Incidence (%)"),
     color=color
 ).properties(
     width=150,
@@ -176,7 +176,7 @@ legend = alt.Chart(f3_subset).mark_point().encode(
 )
 chart3 = alt.layer(line, band, data=f3_subset).facet(
     facet = alt.Facet('Indicator_short:O', title=None), columns = 3).properties(
-        title = "Percentage of responses over time").resolve_scale(
+        title = "Long Covid Indicator Incidence Over Time").resolve_scale(
             y = "independent", x= "independent")
 
 st.altair_chart(chart3 | legend, use_container_width=True)
