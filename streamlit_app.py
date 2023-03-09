@@ -88,7 +88,7 @@ rate_color = alt.Color(field="Incidence (%)", type="quantitative", scale=rate_sc
 
 chart_rate = chart_base.mark_geoshape().encode(
     color = rate_color,
-    tooltip = ['Incidence (%):Q', 'Rank:Q']
+    tooltip = ['State:N', 'Incidence (%):Q', 'Rank:Q']
     ).transform_filter(
     selector
     ).properties(
