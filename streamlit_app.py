@@ -18,7 +18,7 @@ def add_bg_from_url():
          .stApp {{
              background-image: url("https://raw.githubusercontent.com/csjohnson23/BMI_706/main/Coronavirus_background_best.jpg");
              background-attachment: fixed;
-             background-size: 1750px
+             background-position: center center
          }}
          </style>
          """,
