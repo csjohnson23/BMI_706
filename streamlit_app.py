@@ -45,7 +45,7 @@ f1.loc[f1['State'] == 'United States', 'id'] = 0
 time_period = st.selectbox("Time Period: ", ('Jun 1 - Jun 13, 2022', 'Jun 29 - Jul 11, 2022',
        'Jul 27 - Aug 8, 2022',
        'Sep 14 - Sep 26, 2022', 'Oct 5 - Oct 17, 2022',
-       'Nov 2 - Nov 14, 2022', 'Nov 30 - Dec 8, 2022',
+       'Nov 2 - Nov 14, 2022',
        'Dec 9 - Dec 19, 2022', 'Jan 4 - Jan 16, 2023',
        'Feb 1 - Feb 13, 2023'))
 
